@@ -19,10 +19,10 @@ class DisjointSet
 public:
  
     // perform MakeSet operation
-    void makeSet(vector<int> const &universe)
+    void makeSet(vector<int> const &items)
     {
         // create `n` disjoint sets (one for each item)
-        for (int i: universe)
+        for (int i: items)
         {
             parent[i] = i;
             rank[i] = 0;
@@ -80,24 +80,22 @@ void printSets(vector<int> const &universe, DisjointSet &ds)
 // Disjoint–Set data structure (Union–Find algorithm)
 int main()
 {
-    // universe of items
-    vector<int> universe = { 1, 2, 3, 4, 5 };
+    vector<int> items = { 1, 2, 3, 4, 5 };
  
-    // initialize `DisjointSet` class
     DisjointSet ds;
  
     cout << "Disjoint Set using Union Rank" << endl;
-    // create a singleton set for each element of the universe
-    ds.makeSet(universe);
-    printSets(universe, ds);
+    
+    ds.makeSet(items);
+    printSets(items, ds);
  
-    ds.Union(4, 3);        // 4 and 3 are in the same set
-    printSets(universe, ds);
+    ds.Union(4, 3);
+    printSets(items, ds);
  
-    ds.Union(2, 1);        // 1 and 2 are in the same set
-    printSets(universe, ds);
-    ds.Union(1, 3);        // 1, 2, 3, 4 are in the same set
-    printSets(universe, ds);
+    ds.Union(2, 1);
+    printSets(items, ds);
+    ds.Union(1, 3);
+    printSets(items, ds);
  
     return 0;
 }
