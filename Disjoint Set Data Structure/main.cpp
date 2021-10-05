@@ -14,6 +14,7 @@ using namespace std;
 class DisjointSet
 {
     unordered_map<int, int> parent;
+    unordered_map<int, int> rank;
  
 public:
  
@@ -24,6 +25,7 @@ public:
         for (int i: universe)
         {
             parent[i] = i;
+            rank[i] = 0;
         }
     }
  
@@ -47,14 +49,30 @@ public:
         int x = Find(a);
         int y = Find(b);
  
-        parent[x] = y;
+        if(x == y)
+        {
+            return ;
+        }
+        if(rank[x] > rank[y])
+        {
+            parent[y] = x;
+        }
+        else if(rank[y] > rank[x])
+        {
+            parent[x] = y;
+        }
+        else
+        {
+            parent[x] = y;
+            rank[y]++;
+        }
     }
 };
  
 void printSets(vector<int> const &universe, DisjointSet &ds)
 {
     for (int i: universe) {
-        cout << ds.Find(i) << " ";
+        cout << ds.Find(i) << " - ";
     }
     cout << endl;
 }
@@ -68,6 +86,7 @@ int main()
     // initialize `DisjointSet` class
     DisjointSet ds;
  
+    cout << "Disjoint Set using Union Rank" << endl;
     // create a singleton set for each element of the universe
     ds.makeSet(universe);
     printSets(universe, ds);
