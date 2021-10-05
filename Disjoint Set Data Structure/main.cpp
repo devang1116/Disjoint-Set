@@ -7,78 +7,78 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 using namespace std;
-
+ 
+// A class to represent a disjoint set
 class DisjointSet
 {
-    public:
-    int size = 10;
-    int set[10];
-    
-    
-    DisjointSet(int s)
+    unordered_map<int, int> parent;
+ 
+public:
+ 
+    // perform MakeSet operation
+    void makeSet(vector<int> const &universe)
     {
-        size = s;
-    }
-    
-    void makeSet()
-    {
-        for(int i = 0 ; i < size ; i++)
+        // create `n` disjoint sets (one for each item)
+        for (int i: universe)
         {
-            set[i] = i;
+            parent[i] = i;
         }
     }
-    
-    int find(int val)
+ 
+    // Find the root of the set in which element `k` belongs
+    int Find(int k)
     {
-        int value = 0;
-        if(val <= 0 || val >= size)
-        {
-            return 0;
+        // if `k` is root
+        if (parent[k] == k) {
+            return k;
         }
-        if(set[val] == val)
-        {
-            value = set[val];
-        }
-        else
-        {
-            find(set[val]);
-        }
-        return value;
+ 
+        // recur for the parent until we find the root
+        return Find(parent[k]);
     }
-    
-    void union_(int node1 , int node2)
+ 
+    // Perform Union of two subsets
+    void Union(int a, int b)
     {
-        if(node1 <= 0 || node1 >= size || node2 <= 0 || node2 >= size)
-        {
-            return;
-        }
-        if(find(node1) == find(node2))
-        {
-            return;
-        }
-        set[node1] = node2;
+        // find the root of the sets in which elements
+        // `x` and `y` belongs
+        int x = Find(a);
+        int y = Find(b);
+ 
+        parent[x] = y;
     }
-    
 };
-
-int main(int argc, const char * argv[])
+ 
+void printSets(vector<int> const &universe, DisjointSet &ds)
 {
-    DisjointSet ds(5);
-    
-    ds.makeSet();
-    
-    for(int i =0 ; i < 5 ; i++)
-    {
-        cout << ds.find(i) << endl;
+    for (int i: universe) {
+        cout << ds.Find(i) << " ";
     }
-    
-    ds.union_(1, 3);
-    ds.union_(3, 4);
-    
-    for(int i =0 ; i < 5 ; i++)
-    {
-        cout << ds.find(i) << endl;
-    }
+    cout << endl;
+}
+ 
+// Disjoint–Set data structure (Union–Find algorithm)
+int main()
+{
+    // universe of items
+    vector<int> universe = { 1, 2, 3, 4, 5 };
+ 
+    // initialize `DisjointSet` class
+    DisjointSet ds;
+ 
+    // create a singleton set for each element of the universe
+    ds.makeSet(universe);
+    printSets(universe, ds);
+ 
+    ds.Union(4, 3);        // 4 and 3 are in the same set
+    printSets(universe, ds);
+ 
+    ds.Union(2, 1);        // 1 and 2 are in the same set
+    printSets(universe, ds);
+    ds.Union(1, 3);        // 1, 2, 3, 4 are in the same set
+    printSets(universe, ds);
+ 
     return 0;
 }
